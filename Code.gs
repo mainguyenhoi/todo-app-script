@@ -4,7 +4,7 @@ const TASKS_KEY = 'tasks';
 function doGet() {
   return HtmlService.createTemplateFromFile('Index')
     .evaluate()
-    .setTitle('Việc cần làm')
+    .setTitle('Timeline ảnh')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -42,4 +42,32 @@ function readTasks_() {
     console.error('Could not parse saved tasks: ' + error);
     return [];
   }
+}
+
+/** Lists folders at the current navigation level in the signed-in user's Drive. */
+function getDriveFolders(parentId) {
+  const folder = parentId ? DriveApp.getFolderById(parentId) : DriveApp.getRootFolder();
+  const iterator = folder.getFolders();
+  const folders = [];
+  while (iterator.hasNext()) {
+    const child = iterator.next();
+    folders.push({ id: child.getId(), name: child.getName() });
+  }
+  return folders.sort(function(a, b) { return a.name.localeCompare(b.name, 'vi'); });
+}
+
+/** Returns image files in a folder, oldest first, for a visual timeline. */
+function getFolderImages(folderId) {
+  if (!folderId) throw new Error('Hãy chọn một folder ảnh.');
+  const files = DriveApp.getFolderById(folderId).getFiles();
+  const images = [];
+  while (files.hasNext()) {
+    const file = files.next();
+    if (file.getMimeType().indexOf('image/') !== 0) continue;
+    images.push({
+      id: file.getId(), name: file.getName(), createdAt: file.getDateCreated().getTime(),
+      thumbnailUrl: 'https://drive.google.com/thumbnail?id=' + file.getId() + '&sz=w1200'
+    });
+  }
+  return images.sort(function(a, b) { return a.createdAt - b.createdAt; });
 }

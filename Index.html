@@ -1,64 +1,6 @@
 <!doctype html>
-<html lang="vi">
-  <head>
-    <base target="_top">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      :root { color-scheme: light; --ink:#172033; --muted:#6b7280; --line:#e8eaf0; --brand:#5b5ce2; --brand-dark:#4647c8; --surface:#fff; --bg:#f6f7fb; }
-      * { box-sizing:border-box; }
-      body { margin:0; min-height:100vh; font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top right,#e7e8ff 0,transparent 31rem),var(--bg); color:var(--ink); }
-      .app { width:min(680px,calc(100% - 32px)); margin:0 auto; padding:clamp(32px,8vw,80px) 0; }
-      header { margin-bottom:28px; } h1 { font-size:clamp(2rem,6vw,3.25rem); letter-spacing:-.055em; margin:0 0 8px; } .subtitle { margin:0; color:var(--muted); }
-      .card { background:var(--surface); border:1px solid rgba(255,255,255,.7); border-radius:20px; box-shadow:0 18px 50px rgba(30,35,90,.08); overflow:hidden; }
-      form { display:flex; gap:10px; padding:18px; border-bottom:1px solid var(--line); } input { min-width:0; flex:1; padding:12px 14px; border:1px solid #d9dce6; border-radius:11px; font:inherit; outline:none; } input:focus { border-color:var(--brand); box-shadow:0 0 0 3px #5b5ce21a; }
-      button { border:0; border-radius:11px; padding:12px 16px; font:inherit; font-weight:650; cursor:pointer; transition:.18s ease; } button:hover { transform:translateY(-1px); } .primary { color:#fff; background:var(--brand); } .primary:hover { background:var(--brand-dark); }
-      .toolbar { display:flex; justify-content:space-between; gap:12px; padding:16px 18px 8px; align-items:center; } .filters { display:flex; gap:5px; } .filter,.clear { background:transparent; color:var(--muted); padding:7px 9px; font-size:.88rem; } .filter.active { color:var(--brand); background:#f0f0ff; } .clear { color:#c24155; }
-      ul { list-style:none; padding:0 18px; margin:0; } li { display:flex; align-items:center; gap:12px; padding:14px 2px; border-bottom:1px solid var(--line); } li:last-child { border-bottom:0; }
-      .check { appearance:none; width:21px; height:21px; border:2px solid #cfd3df; border-radius:7px; cursor:pointer; flex:none; } .check:checked { background:var(--brand); border-color:var(--brand); box-shadow:inset 0 0 0 4px #fff; }
-      .title { flex:1; overflow-wrap:anywhere; } .done .title { color:var(--muted); text-decoration:line-through; } .delete { color:#a5a9b5; background:transparent; padding:6px 8px; font-size:1.25rem; line-height:1; } .delete:hover { color:#dc4054; }
-      .empty { padding:42px 18px 48px; text-align:center; color:var(--muted); } .empty span { display:block; font-size:2rem; margin-bottom:8px; }
-      .footer { display:flex; justify-content:space-between; padding:13px 18px 18px; color:var(--muted); font-size:.9rem; } #notice { min-height:1.25em; color:#b64050; padding:10px 18px 0; font-size:.88rem; }
-      @media (max-width:480px) { .app { width:min(100% - 20px,680px); padding-top:28px; } form { padding:12px; } button { padding:11px 13px; } .toolbar { padding:13px 12px 5px; } ul { padding:0 12px; } .footer { padding:12px; } }
-    </style>
-  </head>
-  <body>
-    <main class="app">
-      <header><h1>Việc cần làm</h1><p class="subtitle">Tập trung vào điều quan trọng nhất hôm nay.</p></header>
-      <section class="card" aria-label="Danh sách công việc">
-        <form id="task-form"><input id="new-task" maxlength="200" autocomplete="off" placeholder="Thêm việc mới..." aria-label="Tên công việc"><button class="primary">Thêm</button></form>
-        <div id="notice" role="alert"></div>
-        <div class="toolbar"><div class="filters" role="tablist"><button class="filter active" data-filter="all">Tất cả</button><button class="filter" data-filter="active">Chưa xong</button><button class="filter" data-filter="completed">Đã xong</button></div><button id="clear" class="clear">Xóa đã xong</button></div>
-        <ul id="tasks"></ul><div id="empty" class="empty" hidden><span>✓</span>Chưa có công việc nào.</div>
-        <div class="footer"><span id="count">0 việc chưa xong</span><span id="sync">Đang tải…</span></div>
-      </section>
-    </main>
-    <script>
-      let tasks = [], filter = 'all';
-      const $ = id => document.getElementById(id);
-      function showError(message) { $('notice').textContent = message || ''; }
-      function save() {
-        $('sync').textContent = 'Đang lưu…';
-        google.script.run.withSuccessHandler(saved => { tasks = saved; $('sync').textContent = 'Đã lưu'; render(); }).withFailureHandler(error => { $('sync').textContent = 'Chưa lưu'; showError(error.message || 'Không thể lưu thay đổi.'); }).saveTasks(tasks);
-      }
-      function render() {
-        const shown = tasks.filter(t => filter === 'all' || (filter === 'completed' ? t.completed : !t.completed));
-        $('tasks').innerHTML = '';
-        shown.forEach(task => {
-          const item = document.createElement('li'); item.className = task.completed ? 'done' : '';
-          const check = document.createElement('input'); check.type = 'checkbox'; check.className = 'check'; check.checked = task.completed; check.setAttribute('aria-label', 'Đánh dấu hoàn thành'); check.onchange = () => { task.completed = check.checked; save(); };
-          const title = document.createElement('span'); title.className = 'title'; title.textContent = task.title;
-          const remove = document.createElement('button'); remove.className = 'delete'; remove.textContent = '×'; remove.setAttribute('aria-label', 'Xóa ' + task.title); remove.onclick = () => { tasks = tasks.filter(t => t.id !== task.id); save(); };
-          item.append(check, title, remove); $('tasks').append(item);
-        });
-        $('empty').hidden = shown.length !== 0;
-        const remaining = tasks.filter(t => !t.completed).length; $('count').textContent = remaining + ' việc chưa xong';
-        document.querySelectorAll('.filter').forEach(button => button.classList.toggle('active', button.dataset.filter === filter));
-      }
-      $('task-form').onsubmit = event => { event.preventDefault(); const input = $('new-task'), title = input.value.trim(); if (!title) return; showError(''); tasks.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), title, completed:false, createdAt:Date.now() }); input.value = ''; save(); };
-      document.querySelectorAll('.filter').forEach(button => button.onclick = () => { filter = button.dataset.filter; render(); });
-      $('clear').onclick = () => { if (tasks.some(t => t.completed)) { tasks = tasks.filter(t => !t.completed); save(); } };
-      google.script.run.withSuccessHandler(result => { tasks = result || []; $('sync').textContent = 'Sẵn sàng'; render(); }).withFailureHandler(error => { $('sync').textContent = 'Lỗi tải'; showError(error.message || 'Không thể tải công việc.'); }).getTasks();
-    </script>
-  </body>
-</html>
+<html lang="vi"><head><base target="_top"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>
+:root{--ink:#172033;--muted:#697386;--brand:#5b5ce2;--line:#e8eaf0;--bg:#f6f7fb}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#e7e8ff,transparent 35rem),var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{width:min(760px,calc(100% - 32px));margin:auto;padding:clamp(32px,8vw,72px) 0}h1{font-size:clamp(2rem,6vw,3.2rem);letter-spacing:-.055em;margin:0 0 7px}.subtitle{color:var(--muted);margin:0 0 28px}.card{background:#fff;border-radius:20px;box-shadow:0 18px 50px #20255a14;overflow:hidden}.folder-bar{padding:18px;border-bottom:1px solid var(--line);display:grid;gap:10px}.row{display:flex;gap:9px;align-items:center}.crumb{color:var(--muted);font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}button{border:0;border-radius:10px;padding:10px 13px;background:#f0f0ff;color:var(--brand);font:inherit;font-weight:650;cursor:pointer}.primary{background:var(--brand);color:#fff}button:disabled{opacity:.55;cursor:wait}.folders{display:flex;flex-wrap:wrap;gap:8px}.folder{background:#f7f8fc;color:#35405a;font-size:.9rem}.timeline{position:relative;padding:24px 18px 30px}.timeline:before{content:"";position:absolute;left:34px;top:34px;bottom:35px;width:2px;background:#dddffd}.step{position:relative;display:grid;grid-template-columns:34px 1fr;gap:13px;padding:0 0 23px}.dot{width:14px;height:14px;margin:9px 0 0 1px;border-radius:50%;background:var(--brand);border:3px solid #e3e4ff;z-index:1}.photo{width:100%;max-height:440px;display:block;object-fit:contain;background:#f2f3f7;border-radius:13px;border:1px solid var(--line)}.name{font-weight:700;margin:0 0 3px;overflow-wrap:anywhere}.date{color:var(--muted);font-size:.87rem;margin:0 0 10px}.empty{padding:54px 20px;text-align:center;color:var(--muted)}#status{min-height:1.3em;padding:11px 18px 0;color:#b64050;font-size:.9rem}@media(max-width:480px){.app{width:min(100% - 20px,760px);padding-top:28px}.folder-bar{padding:13px}.timeline{padding:20px 13px}.timeline:before{left:28px}.step{grid-template-columns:28px 1fr;gap:10px}}
+</style></head><body><main class="app"><h1>Timeline ảnh</h1><p class="subtitle">Chọn folder từ Google Drive của bạn để xem từng bước theo thời gian.</p><section class="card"><div class="folder-bar"><div class="row"><button id="back" title="Quay lại folder trước">←</button><span class="crumb" id="path">Google Drive của tôi</span><button id="refresh" class="primary">Làm mới</button></div><div id="folders" class="folders"></div></div><div id="status" role="alert"></div><div id="timeline" class="timeline"></div><div id="empty" class="empty" hidden>Folder này chưa có ảnh.</div></section></main><script>
+const $=id=>document.getElementById(id);let stack=[],selected=null;const formatDate=t=>new Intl.DateTimeFormat('vi-VN',{dateStyle:'medium',timeStyle:'short'}).format(new Date(t));function error(e){$('status').textContent=(e&&e.message)||'Không thể đọc Google Drive. Hãy cấp quyền rồi thử lại.'}function setBusy(b){$('refresh').disabled=b}function loadFolders(){setBusy(true);$('status').textContent='';const parent=stack.length?stack[stack.length-1].id:null;google.script.run.withSuccessHandler(folders=>{setBusy(false);renderFolders(folders)}).withFailureHandler(e=>{setBusy(false);error(e)}).getDriveFolders(parent)}function renderFolders(folders){$('folders').innerHTML='';folders.forEach(folder=>{const b=document.createElement('button');b.className='folder';b.textContent='📁 '+folder.name;b.onclick=()=>{stack.push(folder);selected=folder;renderPath();loadFolders();loadImages()};$('folders').append(b)});if(!folders.length)$('folders').textContent='Không có folder con.';renderPath()}function renderPath(){$('path').textContent=['Google Drive của tôi'].concat(stack.map(x=>x.name)).join(' / ');$('back').disabled=!stack.length}function loadImages(){if(!selected){$('timeline').innerHTML='';$('empty').hidden=true;return}$('timeline').innerHTML='<div class="empty">Đang tải ảnh…</div>';$('empty').hidden=true;google.script.run.withSuccessHandler(renderImages).withFailureHandler(error).getFolderImages(selected.id)}function renderImages(images){$('timeline').innerHTML='';$('empty').hidden=images.length!==0;images.forEach((image,index)=>{const step=document.createElement('article');step.className='step';const dot=document.createElement('div');dot.className='dot';const content=document.createElement('div');const title=document.createElement('p');title.className='name';title.textContent='Bước '+(index+1)+': '+image.name;const date=document.createElement('p');date.className='date';date.textContent=formatDate(image.createdAt);const photo=document.createElement('img');photo.className='photo';photo.src=image.thumbnailUrl;photo.alt=image.name;photo.loading='lazy';photo.onerror=()=>{photo.alt='Không thể tải ảnh – hãy kiểm tra quyền truy cập file.'};content.append(title,date,photo);step.append(dot,content);$('timeline').append(step)})}$('back').onclick=()=>{if(!stack.length)return;stack.pop();selected=stack.length?stack[stack.length-1]:null;loadFolders();loadImages()};$('refresh').onclick=()=>{loadFolders();loadImages()};loadFolders();
+</script></body></html>

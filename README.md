@@ -1,13 +1,12 @@
-# Todo App – Google Apps Script
+# Timeline ảnh Google Drive – Google Apps Script
 
-Ứng dụng Todo responsive, triển khai trực tiếp thành Google Apps Script Web App. Dữ liệu được lưu theo từng người dùng trong `UserProperties`, do đó mỗi tài khoản Google có danh sách riêng.
+Web App hiển thị ảnh trong Google Drive của người đang đăng nhập theo dạng timeline. Người dùng chọn folder, duyệt các folder con và ảnh trực tiếp trong folder được sắp xếp từ cũ đến mới.
 
 ## Tính năng
 
-- Thêm, hoàn thành, xóa công việc
-- Lọc tất cả / chưa xong / đã xong
-- Xóa toàn bộ việc đã hoàn thành
-- Tự động lưu trên Google Apps Script
+- Duyệt folder từ Google Drive của người đang đăng nhập
+- Hiển thị ảnh thành các bước trong timeline, theo ngày tạo ảnh
+- Chỉ truy cập Drive của chính người dùng đã cấp quyền
 
 ## Triển khai
 
