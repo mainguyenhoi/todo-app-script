@@ -4,6 +4,26 @@
 </style></head><body><main class="app"><header><p class="eyebrow">Google Drive</p><h1>Timeline ảnh</h1><p class="subtitle">Mỗi ảnh là một nhánh trong câu chuyện của bạn.</p></header><section class="card"><div class="folder-bar"><div class="row"><button id="back" title="Quay lại folder trước">←</button><span class="crumb" id="path">Google Drive của tôi</span><button id="refresh" class="primary">Làm mới</button></div><div id="folders" class="folders"></div></div><div id="status" role="alert"></div><div id="timeline" class="timeline"></div><div id="empty" class="empty" hidden>Folder này chưa có ảnh.</div></section></main><script>
 const $=id=>document.getElementById(id);let stack=[],selected=null;const formatTime=t=>new Intl.DateTimeFormat('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(t));function error(e){$('status').textContent=(e&&e.message)||'Không thể đọc Google Drive. Hãy cấp quyền rồi thử lại.'}function setBusy(b){$('refresh').disabled=b}function loadFolders(){setBusy(true);$('status').textContent='';const parent=stack.length?stack[stack.length-1].id:null;google.script.run.withSuccessHandler(folders=>{setBusy(false);renderFolders(folders)}).withFailureHandler(e=>{setBusy(false);error(e)}).getDriveFolders(parent)}function renderFolders(folders){$('folders').innerHTML='';folders.forEach(folder=>{const b=document.createElement('button');b.className='folder';b.textContent='📁 '+folder.name;b.onclick=()=>{stack.push(folder);selected=folder;renderPath();loadFolders();loadImages()};$('folders').append(b)});if(!folders.length)$('folders').textContent='Không có folder con.';renderPath()}function renderPath(){$('path').textContent=['Google Drive của tôi'].concat(stack.map(x=>x.name)).join(' / ');$('back').disabled=!stack.length}function loadImages(){if(!selected){$('timeline').innerHTML='';$('empty').hidden=true;return}$('timeline').innerHTML='<div class="empty">Đang tải ảnh…</div>';$('empty').hidden=true;google.script.run.withSuccessHandler(renderImages).withFailureHandler(error).getFolderImages(selected.id)}function renderImages(images){$('timeline').innerHTML='';$('empty').hidden=images.length!==0;images.forEach((image,index)=>{const step=document.createElement('article');step.className='step '+(index%2?'right':'left');const dot=document.createElement('div');dot.className='dot';const entry=document.createElement('div');entry.className='entry';const head=document.createElement('div');head.className='entry-head';const time=document.createElement('p');time.className='time';time.textContent=formatTime(image.createdAt);const file=document.createElement('p');file.className='file';file.textContent=image.name;const photo=document.createElement('img');photo.className='photo';photo.src=image.thumbnailUrl;photo.alt=image.name;photo.loading='lazy';photo.onerror=()=>{photo.alt='Không thể tải ảnh – hãy kiểm tra quyền truy cập file.'};head.append(time,file);entry.append(head,photo);step.append(dot,entry);$('timeline').append(step)})}$('back').onclick=()=>{if(!stack.length)return;stack.pop();selected=stack.length?stack[stack.length-1]:null;loadFolders();loadImages()};$('refresh').onclick=()=>{loadFolders();loadImages()};loadFolders();
 </script><script>
+  const groupStyle=document.createElement('style');
+  groupStyle.textContent='.date-group{position:relative;z-index:4;margin:10px auto 32px;width:max-content;max-width:90%;padding:8px 18px;border:2px dashed #8a5e3c;border-radius:999px;background:#fff4d8;color:#71462e;font-family:cursive;font-size:1.05rem;font-weight:bold;box-shadow:2px 3px #70452542}.date-group:before{content:"✦";margin-right:8px;color:#e49b49}.date-group:after{content:"✦";margin-left:8px;color:#e49b49}';
+  document.head.append(groupStyle);
+  function renderImages(images){
+    $('timeline').innerHTML='';$('empty').hidden=images.length!==0;
+    let lastDay='';
+    images.forEach((image,index)=>{
+      const day=new Intl.DateTimeFormat('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(image.createdAt));
+      if(day!==lastDay){const label=document.createElement('div');label.className='date-group';label.textContent=day;$('timeline').append(label);lastDay=day;}
+      const step=document.createElement('article');step.className='step '+(index%2?'right':'left');
+      const dot=document.createElement('div');dot.className='dot';
+      const entry=document.createElement('div');entry.className='entry';
+      const head=document.createElement('div');head.className='entry-head';
+      const time=document.createElement('p');time.className='time';time.textContent=formatTime(image.createdAt);
+      const file=document.createElement('p');file.className='file';file.textContent=image.name;
+      const photo=document.createElement('img');photo.className='photo';photo.src=image.thumbnailUrl;photo.alt=image.name;photo.loading='lazy';photo.onerror=()=>{photo.alt='Không thể tải ảnh – hãy kiểm tra quyền truy cập file.'};
+      head.append(time,file);entry.append(head,photo);step.append(dot,entry);$('timeline').append(step);
+    });
+  }
+</script><script>
   const lightbox=document.createElement('div');
   lightbox.className='lightbox';
   lightbox.innerHTML='<button aria-label="Đóng ảnh">×</button><img alt="Ảnh toàn màn hình">';
