@@ -11,7 +11,7 @@ const $=id=>document.getElementById(id);let stack=[],selected=null;const formatT
   const lightboxImage=lightbox.querySelector('img');
   document.addEventListener('click',event=>{
     const photo=event.target.closest('.photo');
-    if(photo){const id=new URL(photo.src).searchParams.get('id');lightboxImage.src='https://drive.google.com/uc?export=view&id='+id;lightboxImage.alt=photo.alt;lightbox.classList.add('open');return;}
+    if(photo){const id=new URL(photo.src).searchParams.get('id');lightboxImage.src='https://drive.google.com/thumbnail?id='+id+'&sz=w4000';lightboxImage.alt=photo.alt;lightbox.classList.add('open');return;}
     if(event.target===lightbox||event.target.closest('button'))lightbox.classList.remove('open');
   });
   const fullscreenStyle=document.createElement('style');
