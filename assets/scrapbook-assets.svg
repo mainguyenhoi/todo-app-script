@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+    <filter id="pin-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="1" dy="3" stdDeviation="2" flood-opacity="0.35"/>
+    </filter>
+    <linearGradient id="tape1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFD1DC" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFDFD3" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="tape2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B5EAD7" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#C7CEEA" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FEE180"/>
+      <stop offset="100%" stop-color="#F5B041"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background container for asset sheet -->
+  <rect width="100%" height="100%" fill="#FDFBF7" rx="16"/>
+  <text x="400" y="45" font-family="'Quicksand', sans-serif" font-size="22" font-weight="bold" fill="#7D6B58" text-anchor="middle">Memory Board UI &amp; Scrapbook Asset Pack</text>
+
+  <!-- Pushpins -->
+  <g id="pushpin-pink" transform="translate(100, 100)" filter="url(#pin-shadow)">
+    <circle cx="20" cy="20" r="16" fill="#FF8FAB"/>
+    <ellipse cx="16" cy="14" rx="5" ry="3" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="20" cy="20" r="6" fill="#FB6F92"/>
+  </g>
+  <g id="pushpin-mint" transform="translate(160, 100)" filter="url(#pin-shadow)">
+    <circle cx="20" cy="20" r="16" fill="#70D6BC"/>
+    <ellipse cx="16" cy="14" rx="5" ry="3" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="20" cy="20" r="6" fill="#48B89C"/>
+  </g>
+  <g id="pushpin-lavender" transform="translate(220, 100)" filter="url(#pin-shadow)">
+    <circle cx="20" cy="20" r="16" fill="#B39DDB"/>
+    <ellipse cx="16" cy="14" rx="5" ry="3" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="20" cy="20" r="6" fill="#9575CD"/>
+  </g>
+  <g id="pushpin-yellow" transform="translate(280, 100)" filter="url(#pin-shadow)">
+    <circle cx="20" cy="20" r="16" fill="#FFE082"/>
+    <ellipse cx="16" cy="14" rx="5" ry="3" fill="#FFFFFF" opacity="0.6"/>
+    <circle cx="20" cy="20" r="6" fill="#FFCA28"/>
+  </g>
+
+  <!-- Washi Tapes -->
+  <g id="washi-tape-floral" transform="translate(420, 95)" filter="url(#shadow)">
+    <polygon points="0,5 150,0 148,35 0,38" fill="url(#tape1)"/>
+    <!-- Small dots pattern on tape -->
+    <circle cx="20" cy="18" r="2.5" fill="#E57373" opacity="0.7"/>
+    <circle cx="50" cy="16" r="2.5" fill="#81C784" opacity="0.7"/>
+    <circle cx="80" cy="20" r="2.5" fill="#E57373" opacity="0.7"/>
+    <circle cx="110" cy="17" r="2.5" fill="#BA68C8" opacity="0.7"/>
+    <circle cx="135" cy="19" r="2.5" fill="#81C784" opacity="0.7"/>
+  </g>
+  <g id="washi-tape-mint" transform="translate(600, 95)" filter="url(#shadow)">
+    <polygon points="0,0 150,6 148,40 2,36" fill="url(#tape2)"/>
+    <!-- Diagonal stripes -->
+    <line x1="20" y1="2" x2="35" y2="37" stroke="#FFF" stroke-width="3" opacity="0.5"/>
+    <line x1="50" y1="3" x2="65" y2="38" stroke="#FFF" stroke-width="3" opacity="0.5"/>
+    <line x1="80" y1="4" x2="95" y2="39" stroke="#FFF" stroke-width="3" opacity="0.5"/>
+    <line x1="110" y1="5" x2="125" y2="40" stroke="#FFF" stroke-width="3" opacity="0.5"/>
+  </g>
+
+  <!-- Paper Clip -->
+  <g id="paperclip" transform="translate(110, 200) rotate(25)" filter="url(#shadow)">
+    <path d="M10,60 L10,20 C10,9 25,9 25,20 L25,70 C25,85 45,85 45,70 L45,15 C45,0 0,0 0,25 L0,65" 
+          fill="none" stroke="#B0BEC5" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Wax Seal Envelope -->
+  <g id="envelope" transform="translate(200, 180) rotate(-6)" filter="url(#shadow)">
+    <rect width="130" height="90" rx="6" fill="#FFFDF8" stroke="#E6DFD5" stroke-width="1.5"/>
+    <path d="M0,0 L65,50 L130,0" fill="none" stroke="#DCD3C7" stroke-width="1.5"/>
+    <path d="M0,90 L45,45 M130,90 L85,45" fill="none" stroke="#E6DFD5" stroke-width="1.5"/>
+    <!-- Wax Seal -->
+    <circle cx="65" cy="50" r="14" fill="#C0392B"/>
+    <circle cx="65" cy="50" r="11" fill="#962D22"/>
+    <path d="M62,45 C65,42 68,45 65,49 C62,53 65,56 68,54" fill="none" stroke="#E6B0AA" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Pressed Flower & Botanical -->
+  <g id="pressed-flower" transform="translate(370, 170)" filter="url(#shadow)">
+    <path d="M30,120 Q25,60 30,20" stroke="#5D6D4E" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M28,80 Q10,70 15,55 Q30,60 28,80" fill="#73865D" opacity="0.9"/>
+    <path d="M29,65 Q45,55 42,40 Q25,48 29,65" fill="#73865D" opacity="0.9"/>
+    <!-- Petals -->
+    <circle cx="30" cy="18" r="14" fill="#E8A598"/>
+    <circle cx="20" cy="12" r="12" fill="#D98880"/>
+    <circle cx="40" cy="12" r="12" fill="#D98880"/>
+    <circle cx="24" cy="4" r="11" fill="#CD6155"/>
+    <circle cx="36" cy="4" r="11" fill="#CD6155"/>
+    <circle cx="30" cy="12" r="6" fill="#F9E79F"/>
+  </g>
+
+  <!-- Doodled Stars -->
+  <g id="doodle-stars" transform="translate(480, 190)">
+    <polygon points="25,5 31,18 45,18 34,27 38,40 25,32 12,40 16,27 5,18 19,18" fill="url(#gold)" opacity="0.9"/>
+    <polygon points="75,25 79,34 89,34 81,40 84,49 75,43 66,49 69,40 61,34 71,34" fill="none" stroke="#F39C12" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="60" cy="15" r="3" fill="#F1C40F"/>
+    <circle cx="95" cy="55" r="2" fill="#F39C12"/>
+  </g>
+
+  <!-- Blank Polaroid Frame Item -->
+  <g id="blank-polaroid" transform="translate(560, 170) rotate(5)" filter="url(#shadow)">
+    <!-- Photo Paper -->
+    <rect width="180" height="220" rx="4" fill="#FFFFFF" stroke="#EFEBE9" stroke-width="1.5"/>
+    <!-- Inner Photo Area -->
+    <rect x="15" y="15" width="150" height="150" fill="#EAE6DF" stroke="#D7CCC8" stroke-width="1" rx="2"/>
+    <text x="90" y="95" font-family="'Quicksand', sans-serif" font-size="14" fill="#A1887F" text-anchor="middle">Photo Placeholder</text>
+    <circle cx="90" cy="65" r="16" fill="#D7CCC8"/>
+    <!-- Tape at corner -->
+    <polygon points="-5,10 45,-5 50,20 0,35" fill="url(#tape1)" opacity="0.85"/>
+  </g>
+
+  <!-- Curving Timeline Ribbon Path Segment -->
+  <g id="ribbon-path" transform="translate(80, 390)" filter="url(#shadow)">
+    <path d="M30,80 C150,20 280,130 420,70 C530,20 620,90 680,60" fill="none" stroke="#F5EFEB" stroke-width="48" stroke-linecap="round"/>
+    <path d="M30,80 C150,20 280,130 420,70 C530,20 620,90 680,60" fill="none" stroke="#BCAAA4" stroke-width="2.5" stroke-dasharray="6,8" stroke-linecap="round"/>
+    <text x="240" y="76" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#6D4C41">2024: Next Milestone •••</text>
+  </g>
+
+  <!-- Kraft Tag Item -->
+  <g id="kraft-tag" transform="translate(100, 480) rotate(-8)" filter="url(#shadow)">
+    <polygon points="0,15 15,0 120,0 120,60 15,60 0,45" fill="#D7B17C" stroke="#B88E52" stroke-width="1.5"/>
+    <circle cx="15" cy="30" r="5" fill="#FDFBF7" stroke="#8D6E63" stroke-width="1.5"/>
+    <text x="65" y="35" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#5D4037" text-anchor="middle">Memory Tag</text>
+  </g>
+</svg>
